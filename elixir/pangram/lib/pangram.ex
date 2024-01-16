@@ -11,8 +11,6 @@ defmodule Pangram do
       true
 
   """
-  @all_char_list ~c"abcdefghijklmnopqrstuvwxyz"
-
   @spec pangram?(String.t()) :: boolean
   def pangram?(sentence) do
     (Enum.to_list(?a..?z) -- cleaned(sentence))
