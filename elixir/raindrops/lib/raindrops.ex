@@ -12,16 +12,11 @@ defmodule Raindrops do
 
   @spec convert(pos_integer) :: String.t()
   def convert(number) do
-    sound =
-      @sounds
-      |> Enum.reduce("", fn {divisor, word}, acc ->
-        if rem(number, divisor) == 0, do: acc <> word, else: acc
-      end)
+    list = for x <- [3, 5, 7], rem(number, x) == 0, do: @sounds[x]
 
-    if sound == "" do
-      to_string(number)
-    else
-      sound
+    case list do
+      [] -> to_string(number)
+      _ -> Enum.join(list)
     end
   end
 end
