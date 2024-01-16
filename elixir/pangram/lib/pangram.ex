@@ -15,12 +15,9 @@ defmodule Pangram do
 
   @spec pangram?(String.t()) :: boolean
   def pangram?(sentence) do
-    char_list =
-      sentence
-      |> String.downcase()
-      |> String.to_charlist()
-
-    @all_char_list
-    |> Enum.all?(&(&1 in char_list))
+    (Enum.to_list(?a..?z) -- cleaned(sentence))
+    |> Enum.empty?()
   end
+
+  defp cleaned(sentence), do: String.downcase(sentence) |> to_charlist()
 end
