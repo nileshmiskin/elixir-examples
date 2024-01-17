@@ -26,14 +26,6 @@ defmodule Strain do
   """
   @spec discard(list :: list(any), fun :: (any -> boolean)) :: list(any)
   def discard(list, fun) do
-    do_discard(list, fun, []) |> Enum.reverse()
-  end
-  defp do_discard([], _fun, acc), do: acc
-  defp do_discard([head | tail], fun, acc) do
-    if fun.(head) do
-      do_discard(tail, fun, acc)
-    else
-      do_discard(tail, fun, [head|acc])
-    end
+    keep(list, &(!fun.(&1)))
   end
 end
