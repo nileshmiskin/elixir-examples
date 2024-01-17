@@ -14,8 +14,7 @@ defmodule Sublist do
     end
   end
   defp sublist?(a, b) do
-    s1 = Enum.join(a, "-") # Adding '-' Ensures [2, 22] is not sublist of [22, 2]
-    s2 = Enum.join(b, "-")
-    String.contains?(s2, s1) and Enum.all?(a, &(&1 in b))
+    Stream.chunk_every(b, length(a), 1, :discard)
+    |> Enum.any?(&(&1 === a))
   end
 end
