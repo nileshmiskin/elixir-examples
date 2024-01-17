@@ -2,16 +2,6 @@ defmodule Scrabble do
   @doc """
   Calculate the scrabble score for the word.
   """
-  @scores %{
-    ~c"AEIOULNRST" => 1,
-    ~c"DG" => 2,
-    ~c"BCMP" => 3,
-    ~c"FHVWY" => 4,
-    ~c"K" => 5,
-    ~c"JX" => 8,
-    ~c"QZ" => 10
-  }
-
   @spec score(String.t()) :: non_neg_integer
   def score(word) do
     word
@@ -20,11 +10,12 @@ defmodule Scrabble do
     |> Enum.reduce(0, fn char, acc -> acc + get_score(char) end)
   end
 
-  defp get_score(char) when char in ?A..?Z do
-    @scores
-    |> Enum.find(fn {k, _v} -> char in k end)
-    |> elem(1)
-  end
-
+  defp get_score(char) when char in ~c"AEIOULNRST", do: 1
+  defp get_score(char) when char in ~c"DG", do: 2
+  defp get_score(char) when char in ~c"BCMP", do: 3
+  defp get_score(char) when char in ~c"FHVWY", do: 4
+  defp get_score(char) when char in ~c"K", do: 5
+  defp get_score(char) when char in ~c"JX", do: 8
+  defp get_score(char) when char in ~c"QZ", do: 10
   defp get_score(_char), do: 0
 end
