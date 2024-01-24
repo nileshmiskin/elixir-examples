@@ -15,30 +15,17 @@ defmodule SecretHandshake do
   """
   @spec commands(code :: integer) :: list(String.t())
   def commands(code) do
-    binary =
-      Integer.to_string(code, 2)
-      |> String.pad_leading(5, "0")
-      |> String.reverse()
-      |> String.to_charlist()
-
-    actions = ["wink", "double blink", "close your eyes", "jump", :reverse]
-
-    Enum.zip(binary, actions)
-    |> Enum.reduce([], fn {bin, act}, acc -> get_actions(bin, act, acc) end)
+    []
+    |> do_commands(0b00001 == Bitwise.band(code, 0b00001), "wink")
+    |> do_commands(0b00010 == Bitwise.band(code, 0b00010), "double blink")
+    |> do_commands(0b00100 == Bitwise.band(code, 0b00100), "close your eyes")
+    |> do_commands(0b01000 == Bitwise.band(code, 0b01000), "jump")
+    |> do_commands(0b10000 == Bitwise.band(code, 0b10000), &Enum.reverse/1)
     |> Enum.reverse()
   end
 
-  defp get_actions(bin, act, acc) do
-    cond do
-      bin == ?0 ->
-        acc
-
-      bin == ?1 ->
-        if act == :reverse do
-          Enum.reverse(acc)
-        else
-          [act | acc]
-        end
-    end
-  end
+  defp do_commands(acc, do?, action)
+  defp do_commands(acc, false, _), do: acc
+  defp do_commands(acc, true, action) when is_binary(action), do: [action | acc]
+  defp do_commands(acc, true, fun), do: fun.(acc)
 end
