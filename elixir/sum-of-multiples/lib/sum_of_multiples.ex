@@ -4,27 +4,14 @@ defmodule SumOfMultiples do
   """
   @spec to(non_neg_integer, [non_neg_integer]) :: non_neg_integer
   def to(limit, factors) do
-    factors
-    |> multiples(limit)
-    |> uniq()
-    |> sum()
-  end
+    factors = Enum.reject(factors, &(&1 == 0))
 
-  defp sum(numbers), do: Enum.sum(numbers)
+    multiple? = fn number ->
+      Enum.any?(factors, fn factor -> rem(number, factor) == 0 end)
+    end
 
-  defp uniq(list), do: Enum.uniq(list)
-
-  defp multiples(factors, limit) do
-    Enum.reduce(factors, [], fn number, acc ->
-      acc ++ multiples_of(number, limit)
-    end)
-  end
-
-  defp multiples_of(0, _limit), do: []
-  defp multiples_of(number, limit) when number > limit, do: []
-
-  defp multiples_of(number, limit) do
-    num_multiples = div(limit - 1, number)
-    1..num_multiples |> Enum.map(&(&1 * number))
+    1..(limit - 1)
+    |> Enum.filter(multiple?)
+    |> Enum.sum()
   end
 end
